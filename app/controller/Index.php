@@ -56,7 +56,7 @@ function send_msg($url , $req) {
     $options = array (
       'http' => array (
         'method' => 'POST' ,
-        'header' => 'Content-type: application/json',
+        'header' => 'Content-type: application/json;charset=utf-8',
         'content' => $req,
         'timeout' => 15
       )
