@@ -37,14 +37,15 @@ class Index
                 'touser' => $openid ,
                 'msgtype' => 'text',
                 'text' => array(
-                    'content'  => '云托管接收消息推送成功，内容如下: '.json_encode($msg)."\n"
+                    'content'  => '云托管接收消息推送成功，内容如下: '.json_encode($msg, JSON_UNESCAPED_UNICODE)."\n"
                 )
               );
 
-            Log::write('send_msg req: '.json_encode($req));
-            $rsp = send_msg('http://api.weixin.qq.com/cgi-bin/message/custom/send', json_encode($req));
-            Log::write('send_msg rsp: '.json_encode($rsp));
-            return json_encode($rsp);
+            $req = json_encode($req, JSON_UNESCAPED_UNICODE);
+            Log::write('send_msg req: '.$req);
+            $rsp = send_msg('http://api.weixin.qq.com/cgi-bin/message/custom/send', $req);
+            Log::write('send_msg rsp: '.json_encode($rsp, JSON_UNESCAPED_UNICODE));
+            return json_encode($rsp, JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             Log::write('send_msg error: '.$e);
             return $e;
@@ -56,7 +57,7 @@ function send_msg($url , $req) {
     $options = array (
       'http' => array (
         'method' => 'POST' ,
-        'header' => 'Content-type: application/json;charset=utf-8',
+        'header' => 'Content-type: application/json; charset=utf-8',
         'content' => $req,
         'timeout' => 15
       )
@@ -65,4 +66,4 @@ function send_msg($url , $req) {
     $context = stream_context_create($options);
     $result = file_get_contents($url , false, $context);
     return $result ;
- }
+}
