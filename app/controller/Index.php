@@ -31,6 +31,12 @@ class Index
     public function post()
     {
         try {
+            // 没有x-wx-source头的，不是微信的来源，不处理
+            $source = request()->header('x-wx-source');
+            if ($source == null) {
+                return json('Invalid request source', 400);
+            }
+
             $openid = request()->header('x-wx-openid');
             $msg = request()->param();
             $req = array(
@@ -53,7 +59,8 @@ class Index
     }
 }
 
-function send_msg($url , $req) {
+function send_msg($url, $req) 
+{
     $options = array (
       'http' => array (
         'method' => 'POST' ,
